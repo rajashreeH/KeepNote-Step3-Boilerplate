@@ -10,6 +10,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.ComponentScan;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.jdbc.datasource.DriverManagerDataSource;
 import org.springframework.orm.hibernate5.HibernateTransactionManager;
 import org.springframework.orm.hibernate5.LocalSessionFactoryBean;
 import org.springframework.transaction.annotation.EnableTransactionManagement;
@@ -43,7 +44,7 @@ public class ApplicationContextConfig {
 	 * dataSource. To create the DataSource bean, we need to know: 1. Driver class
 	 * name 2. Database URL 3. UserName 4. Password
 	 */
-	@Bean
+	/*@Bean
 	@Autowired
 	public DataSource dataSource() {
 		BasicDataSource dataSource = new BasicDataSource();
@@ -51,6 +52,18 @@ public class ApplicationContextConfig {
         dataSource.setUrl("jdbc:mysql://localhost:3306/keepNote");
         dataSource.setUsername("root");
         dataSource.setPassword("root");
+		return dataSource;
+	}*/
+	
+	@Bean
+	@Autowired
+	public DataSource dataSource() {
+		DriverManagerDataSource dataSource = new DriverManagerDataSource();
+		dataSource.setDriverClassName("com.mysql.cj.jdbc.Driver");
+		dataSource.setUrl("jdbc:mysql://" + System.getenv("MYSQL_HOST") + ":3306/" + System.getenv("MYSQL_DATABASE")
+				+ "?verifyServerCertificate=false&useSSL=false&requireSSL=false");
+		dataSource.setUsername(System.getenv("MYSQL_USER"));
+		dataSource.setPassword(System.getenv("MYSQL_PASSWORD"));
 		return dataSource;
 	}
 	/*
